@@ -18,13 +18,13 @@ kernelTST <- function(X,Y){
   Kx <- kernelMatrix(x = X,kernel = rbf)
   Ky <- kernelMatrix(x = Y,kernel = rbf)
   
-  #get U statistic
+  #get test statistic
   diag(Kx)<-0;diag(Ky)<-0
   term1 <- sum(Kx)/(nX*(nX-1))
   term2 <- sum(Ky)/(nY*(nY-1))
   term3 <- 2*sum(kernelMatrix(x=X,y=Y,kernel=rbf))/(nX*nY)
   Ustatistic <- term1+term2-term3
-  Nstatistic <- N*Ustatistic
+  TestStatistic <- N*Ustatistic
   
   
   #get critical values
@@ -38,17 +38,17 @@ kernelTST <- function(X,Y){
   criticalvalue <- sort(kimusample)[0.95*length(kimusample)]
   
   
-  kimu.plot <- ggplot(data.frame(kimubunpu = kimusample),aes(kimubunpu))+geom_histogram()+
+  kimu.plot <- ggplot(data.frame(kimubunpu = kimusample),aes(kimubunpu))+geom_histogram(bins=30)+
     geom_vline(xintercept=criticalvalue,col='red',show.legend=TRUE)+
-    geom_vline(xintercept=Nstatistic,linetype='dashed',show.legend=TRUE)
+    geom_vline(xintercept=TestStatistic,linetype='dashed',show.legend=TRUE)
   
   
-  kekka <- list(CV=criticalvalue,NU=Nstatistic,kimu='Rejected',kimu.plot)
-  if (criticalvalue>Nstatistic){
-    kekka$kimu = 'Accepted'
+  outcome <- list(CriticalValue=criticalvalue,TestStatistic=TestStatistic,NullHypothesis='Rejected',kimu.plot)
+  if (criticalvalue>TestStatistic){
+    outcome$NullHypothesis = 'Accepted'
   }
   else{
-    kekka$kimu = 'Rejected'
+    outcome$NullHypothesis = 'Rejected'
   }
-  return(kekka)
+  return(outcome)
 }

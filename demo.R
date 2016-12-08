@@ -5,8 +5,8 @@ require(dplyr)
 source("kernelTST.R")
 
 #one dimensional example
-x <- runif(500,-1,1)
-y <- runif(500,-1.1,1.1)
+x <- rnorm(500,0,sd=sqrt(1/3))
+y <- runif(500,-1,1)
 kernelTST(x,y)
 
 #multi dimensional example
